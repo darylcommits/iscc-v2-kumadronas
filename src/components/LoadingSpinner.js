@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Shield, Clock, Calendar, Wifi, Database } from 'lucide-react';
 
+const STEPS = [
+  { icon: Wifi, text: "Connecting to server", delay: 0 },
+  { icon: Shield, text: "Verifying authentication", delay: 1000 },
+  { icon: Database, text: "Loading your profile", delay: 2000 },
+  { icon: Calendar, text: "Preparing dashboard", delay: 3000 }
+];
+
 const LoadingSpinner = ({ message = "Loading your dashboard..." }) => {
   const [dots, setDots] = useState('');
   const [currentStep, setCurrentStep] = useState(0);
-  
-  const steps = [
-    { icon: Wifi, text: "Connecting to server", delay: 0 },
-    { icon: Shield, text: "Verifying authentication", delay: 1000 },
-    { icon: Database, text: "Loading your profile", delay: 2000 },
-    { icon: Calendar, text: "Preparing dashboard", delay: 3000 }
-  ];
 
   useEffect(() => {
     // Animate dots
@@ -20,7 +20,7 @@ const LoadingSpinner = ({ message = "Loading your dashboard..." }) => {
 
     // Animate steps
     const stepInterval = setInterval(() => {
-      setCurrentStep(prev => (prev + 1) % steps.length);
+      setCurrentStep(prev => (prev + 1) % STEPS.length);
     }, 1500);
 
     return () => {
@@ -29,7 +29,7 @@ const LoadingSpinner = ({ message = "Loading your dashboard..." }) => {
     };
   }, []);
 
-  const CurrentIcon = steps[currentStep].icon;
+  const CurrentIcon = STEPS[currentStep].icon;
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-green-50 to-slate-50 flex items-center justify-center">
       <div className="text-center">
@@ -76,14 +76,14 @@ const LoadingSpinner = ({ message = "Loading your dashboard..." }) => {
           <div className="flex items-center justify-center space-x-3">
             <CurrentIcon className="w-5 h-5 text-emerald-600 animate-pulse" />
             <span className="text-sm font-medium text-gray-700">
-              {steps[currentStep].text}
+              {STEPS[currentStep].text}
             </span>
           </div>
         </div>
 
         {/* Progress Steps */}
         <div className="flex justify-center space-x-2 mb-6">
-          {steps.map((step, index) => {
+          {STEPS.map((step, index) => {
             const StepIcon = step.icon;
             return (
               <div

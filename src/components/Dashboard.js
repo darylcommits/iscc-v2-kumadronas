@@ -47,7 +47,6 @@ import {
   CheckCircle,
   XCircle,
   Info,
-  HelpCircle,
   BarChart3,
   Trash2,
   Printer,

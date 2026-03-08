@@ -4,7 +4,6 @@ import { supabase } from '../lib/supabase';
 import {
   Users,
   Search,
-  Plus,
   Edit,
   Trash2,
   Mail,
@@ -12,8 +11,6 @@ import {
   GraduationCap,
   CheckCircle,
   XCircle,
-  Download,
-  Shield,
   Eye,
   EyeOff,
   Save,
@@ -345,49 +342,6 @@ const StudentManagement = () => {
     } catch (err) {
       console.error('Error updating student status:', err);
       error('Failed to update student status');
-    }
-  };
-
-  const exportStudents = (format) => {
-    const exportData = filteredStudents.map(student => ({
-      'Full Name': student.full_name,
-      'Email': student.email,
-      'Student Number': student.student_number || 'N/A',
-      'Year Level': student.year_level || 'N/A',
-      'Phone Number': student.phone_number || 'N/A',
-      'Status': student.is_active ? 'Active' : 'Inactive',
-      'Total Duties': student.schedule_students?.length || 0,
-      'Completed Duties': student.schedule_students?.filter(s => s.status === 'completed').length || 0,
-      'Created At': new Date(student.created_at).toLocaleDateString()
-    }));
-
-    if (format === 'json') {
-      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `students-export-${new Date().toISOString().split('T')[0]}.json`; a.click();
-      URL.revokeObjectURL(url);
-      success('Students exported as JSON successfully');
-    } else if (format === 'csv') {
-      const headers = Object.keys(exportData[0] || {});
-      const csvContent = [headers.join(','), ...exportData.map(row =>
-        headers.map(h => { const v = row[h]?.toString() || ''; return v.includes(',') ? `"${v}"` : v; }).join(',')
-      )].join('\n');
-      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `students-export-${new Date().toISOString().split('T')[0]}.csv`; a.click();
-      URL.revokeObjectURL(url);
-      success('Students exported as CSV successfully');
-    } else if (format === 'excel') {
-      const headers = Object.keys(exportData[0] || {});
-      const tableHTML = `<table><thead><tr>${headers.map(h => `<th>${h}</th>`).join('')}</tr></thead><tbody>${exportData.map(row => `<tr>${headers.map(h => `<td>${row[h]}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
-      const blob = new Blob([tableHTML], { type: 'application/vnd.ms-excel' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url; a.download = `students-export-${new Date().toISOString().split('T')[0]}.xls`; a.click();
-      URL.revokeObjectURL(url);
-      success('Students exported as Excel successfully');
     }
   };
 
